@@ -11,6 +11,7 @@ module.exports = function(RED) {
         this.lower = config.lower || null;
         this.upper = config.upper || null;
         this.mode = config.mode || "increment";
+        this.prescaler = Number(config.prescaler || 0);
         this.count = this.init;
 
         this.on("input", function(msg) {
