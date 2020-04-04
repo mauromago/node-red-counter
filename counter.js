@@ -11,7 +11,8 @@ module.exports = function(RED) {
         this.lower = config.lower || null;
         this.upper = config.upper || null;
         this.mode = config.mode || "increment";
-        this.prescaler = Number(config.prescaler || 0);
+        this.prescaler = config.prescaler || null;
+        this.scaler = this.prescaler;
         this.count = this.init;
 
         this.on("input", function(msg) {
@@ -89,6 +90,17 @@ module.exports = function(RED) {
                     upperLimitReached = true;
                 }
             }
+            
+            //prescaler
+            if( node.prescaler != null ) {
+                if (node.scaler <= 0 ) {
+                    msg.scale = true;
+                    node.scaler = node.prescaler;
+                } else {
+                    node.scaler--;
+                }
+            }
+                
 
             // single output
             if( node.outputs === "single" ) {
@@ -101,7 +113,7 @@ module.exports = function(RED) {
                 if( upperLimitReached ) {
                     msg.countUpperLimitReached = true;
                 }
-
+                
                 node.send(msg);
             }
 
